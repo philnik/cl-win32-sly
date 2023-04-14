@@ -14,8 +14,6 @@
   (arg :pointer))
 
 
-
-
 (cffi:defcfun ("CoInitializeEx" co-initialize-ex) HRESULT
   (arg :pointer)
   (dwFlangs DWORD)
@@ -24,8 +22,6 @@
 (defun co-initialize-multithreaded ()
   (co-initialize-ex (cffi-sys:null-pointer) COINIT_MULTITHREADED)
 )
-
-
 
 
 ;(co-initialize-ex (cffi-sys:null-pointer)  COINIT_MULTITHREADED)
@@ -54,12 +50,6 @@
   (spszProgID :string)
   (pclsid :pointer))
 
-(cffi:defcfun ("CoCreateInstance" co-create-instance) HRESULT
-  (rclsid :pointer)
-  (pUnkOuter :pointer)
-  (dw-cls-context :int16)
-  (riid :pointer)
-  (ppv :pointer))
 
 
 (defun %unknown-function (unknown symbol)
