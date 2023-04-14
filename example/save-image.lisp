@@ -13,13 +13,15 @@
 
 
 (defun main ()
-  (sb-thread:make-thread
-   (progn
-  (co-initialize-multithreaded)
-  (defparameter ie (create-object-2 "InternetExplorer.Application"))
+;  (sb-thread:make-thread
+  (progn
+    (ole-sys::co-initialize-apartment-threaded)
+    ;;(co-initialize-apartment-threaded)
+;     (co-initialize-multithreaded)
+  (defparameter ie (create-object "InternetExplorer.Application"))
   (setf (ole ie :Visible) t)
   )
-  ))
+  )
 
 
 
@@ -29,6 +31,7 @@
   "Save a sbcl image, even when running from inside Sly.
 This function should only be used in the *inferior-buffer* buffer,
 inside emacs."
+  `(progn
   (mapcar #'(lambda (x)
               (slynk::close-connection 
                x nil nil))
@@ -38,10 +41,11 @@ inside emacs."
                    (slynk-backend::all-threads)))
     (slynk-backend::kill-thread thread))
   (sleep 1)
-  (sb-ext:save-lisp-and-die #P"./your-main-program.exe"
+  ,(sb-ext:save-lisp-and-die #P"./your.exe"
                             :toplevel #'main
                             :executable t
-                            :compression nil))
+                            :compression nil)
+  ))
 
 ;; in *sly-inferior-lisp* buffer
-(sbcl-save-sly-and-die)
+(eval (sbcl-save-sly-and-die))

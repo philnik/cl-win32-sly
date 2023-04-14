@@ -23,6 +23,10 @@
   (co-initialize-ex (cffi-sys:null-pointer) COINIT_MULTITHREADED)
 )
 
+(defun co-initialize-apartment-threaded ()
+  (co-initialize-ex (cffi-sys:null-pointer) COINIT_APARTMENTTHREADED)
+)
+
 
 ;(co-initialize-ex (cffi-sys:null-pointer)  COINIT_MULTITHREADED)
 ;(co-initialize-ex (cffi-sys:null-pointer)  COINIT_APARTMENTTHREADED)
