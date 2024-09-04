@@ -21,8 +21,6 @@
 (use-package :cffi)
 (in-package :cl-win32ole)
 
-
-
 (defun ex ()
   (progn
     (cl-win32ole-sys::coinitialize)
