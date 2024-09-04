@@ -10,27 +10,27 @@
   (nSize DWORD)
   (Arguments :pointer))
 
-(cffi:defcfun ("CoInitialize" co-initialize) HRESULT
-  (arg :pointer))
+(cffi:defcfun ("CoInitialize" coinit) HRESULT
+  (lpSource :pointer))
 
-
-(cffi:defcfun ("CoInitializeEx" co-initialize-ex) HRESULT
-  (arg :pointer)
-  (dwFlangs DWORD)
-  )
-
-(defun co-initialize-multithreaded ()
-  (co-initialize-ex (cffi-sys:null-pointer) COINIT_MULTITHREADED)
+(defun coinitialize ()
+  (cl-win32ole-sys::coinit (cffi-sys:null-pointer))
 )
 
-(defun co-initialize-apartment-threaded ()
-  (co-initialize-ex (cffi-sys:null-pointer) COINIT_APARTMENTTHREADED)
-)
+(cffi:defcfun ("CoUninitialize" co-uninitialize) :void)
 
+;; (cffi:defcfun ("CoInitializeEx" co-initialize-ex) HRESULT
+;;   (arg :pointer)
+;;   (dwFlangs DWORD)
+;;   )
 
-;(co-initialize-ex (cffi-sys:null-pointer)  COINIT_MULTITHREADED)
-;(co-initialize-ex (cffi-sys:null-pointer)  COINIT_APARTMENTTHREADED)
+;; (defun co-initialize-multithreaded-ex ()
+;;   (co-initialize-ex (cffi-sys:null-pointer) COINIT_MULTITHREADED)
+;; )
 
+;; (defun co-initialize-apartment-threaded-ex ()
+;;   (co-initialize-ex (cffi-sys:null-pointer) COINIT_APARTMENTTHREADED)
+;; )
 
 (cffi:defcfun ("CoCreateInstance" co-create-instance) HRESULT
   (rclsid :pointer)
@@ -47,7 +47,7 @@
 ;;   COINIT_SPEED_OVER_MEMORY = 0x8
 ;; } COINIT;
 
-(cffi:defcfun ("CoUninitialize" co-uninitialize) :void)
+
 
 
 (cffi:defcfun ("CLSIDFromProgID" clsid-from-prog-id) HRESULT

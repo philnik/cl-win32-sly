@@ -6,30 +6,38 @@
 ;;   (asdf:oos 'asdf:load-op :cl-win32ole)
 ;;   (use-package :cl-win32ole))
 
+(defparameter cl_directory "c:/Users/filip/AppData/Roaming/lisp/cl-win32-sly")
+(push cl_directory ql:*local-project-directories*)
 
 (ql:quickload :cl-win32ole)
 (use-package :cl-win32ole)
 (use-package :cffi)
 (in-package :cl-win32ole)
 
-(co-initialize-multithreaded)
-(defparameter acad (create-object "BricscadApp.AcadApplication"))
-(defparameter doc (ole acad :ActiveDocument))
-(defparameter model (ole doc :ModelSpace))
-(setf (ole acad :Visible) 1)
-(setf n (ole acad :ActiveDocument :Name))
+
+(defun ex ()
+  (progn
+    (cl-win32ole-sys::co-initialize)
+    (defparameter acad (create-object "BricscadApp.AcadApplication"))
+    (defparameter doc (ole acad :ActiveDocument))
+    (defparameter model (ole doc :ModelSpace))
+    (setf (ole acad :Visible) 1)
+    (format t "acad.ActiveDocument.Name:~a~%" (ole acad :ActiveDocument :Name))
+
+    (invoke model :AddLine "0,0" "100,100")
+    (invoke model :ZoomAll)
+    (cl-win32ole-sys::co-uninitialize)
+    (list acad model doc)))
+
+(setq mydata (ex))
+
 
 
 (format t "acad.ActiveDocument.Name:~a~%" (ole acad :ActiveDocument :Name))
-
 (invoke (ole doc :Application) :ZoomAll)
-
 (defparameter application  (ole doc :Application))
-
 (defparameter selectionset  (ole doc :SelectionSets))
-
 (ole selectionset :Add "myselectionset")
-
 (ole (ole doc :ModelSpace) :Count)
 
 
@@ -83,3 +91,48 @@
 	      (format nil "circle~%0,0,0~%~s~%" i)
 	      )
       )
+
+
+
+
+(ql:quickload "cffi")
+
+(cffi:define-foreign-library winapi
+  (:windows (:or "ole32.dll")))
+
+(cffi:use-foreign-library winapi)
+
+(cffi:defcfun ("CoInitialize" coinitialize) :void
+  (arg :pointer))
+
+(cffi:defcfun ("CoUninitialize" couninitialize) :void)
+
+(couninitialize)
+
+(cffi:defcfun ("CoInitialize" coinitialize) :int
+  ((arg :pointer)))
+
+
+(defun initialize-com ()
+  (let ((result (coinitialize :void)))
+    (if (zerop result)
+        (format t "COM initialized successfully.~%")
+        (format t "Failed to initialize COM. Error code: ~A~%" result))))
+
+(initialize-com)
+
+(defun uninitialize-com ()
+  (couninitialize)
+  (format t "COM uninitialized successfully.~%"))
+
+
+(defun example-com-initialization ()
+  (initialize-com)
+  (unwind-protect
+       (progn
+         ;; Place your COM interactions here
+         (format t "Performing COM operations...~%"))
+    (uninitialize-com)))
+
+;; Run the example function
+(example-com-initialization)

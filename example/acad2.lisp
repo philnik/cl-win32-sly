@@ -21,9 +21,6 @@
 (use-package :cffi)
 (in-package :cl-win32ole)
 
-;; (cffi:define-foreign-library winapi
-;;   (:windows (:or "ole32.dll")))
-;; (cffi:use-foreign-library winapi)
 
 
 (defun ex ()

@@ -12,7 +12,7 @@
 
 
 (defun ie-example2 ()
-  (co-initialize-multithreaded)
+  (co-initialize)
   (let ((ie (create-object "InternetExplorer.Application")))
     (setf (ole ie :visible) t)
     (ole ie :navigate "http://www.google.co.jp/")
@@ -22,7 +22,7 @@
     (sleep 3)
     (ole ie :quit)))
 
-;(ie-example2)
+(ie-example2)
 
 (defun ie-example3 ()
   (co-initialize-multithreaded)
